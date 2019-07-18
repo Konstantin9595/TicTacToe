@@ -9,3 +9,7 @@ use App\TicTacToe;
 
 // var_dump($ticTacToe);
 
+// $TicTacToe = new TicTacToe();
+// $TicTacToe->go(1,1);
+// var_dump($TicTacToe->getStateCanvas());
+

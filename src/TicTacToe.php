@@ -16,46 +16,22 @@ class TicTacToe
         "3,1" => null, "3,2" => null, "3,3" => null
     ];
     private $winerVariations = [
-        1 => [
-          "1,1" => 1, "1,2" => 1, "1,3" => 1,
-          "2,1" => null, "2,2" => null, "2,3" => null,
-          "3,1" => null, "3,2" => null, "3,3" => null
-        ],
-        2 => [
-          "1,1" => null, "1,2" => null, "1,3" => null,
-          "2,1" => 1, "2,2" => 1, "2,3" => 1,
-          "3,1" => null, "3,2" => null, "3,3" => null
-        ],
-        3 => [
-          "1,1" => null, "1,2" => null, "1,3" => null,
-          "2,1" => null, "2,2" => null, "2,3" => null,
-          "3,1" => 1, "3,2" => 1, "3,3" => 1
-        ],
-        4 => [
-          "1,1" => 1, "1,2" => null, "1,3" => null,
-          "2,1" => 1, "2,2" => null, "2,3" => null,
-          "3,1" => 1, "3,2" => null, "3,3" => null
-        ],
-        5 => [
-          "1,1" => null, "1,2" => 1, "1,3" => null,
-          "2,1" => null, "2,2" => 1, "2,3" => null,
-          "3,1" => null, "3,2" => 1, "3,3" => null
-        ],
-        6 => [
-          "1,1" => null, "1,2" => null, "1,3" => 1,
-          "2,1" => null, "2,2" => null, "2,3" => 1,
-          "3,1" => null, "3,2" => null, "3,3" => 1
-        ],
-        7 => [
-          "1,1" => 1, "1,2" => null, "1,3" => null,
-          "2,1" => null, "2,2" => 1, "2,3" => null,
-          "3,1" => null, "3,2" => null, "3,3" => 1
-        ],
-        8 => [
-          "1,1" => null, "1,2" => null, "1,3" => 1,
-          "2,1" => null, "2,2" => 1, "2,3" => null,
-          "3,1" => 1, "3,2" => null, "3,3" => null
-        ]
+        1 => ["1,1" => 1, "1,2" => 1, "1,3" => 1],
+        2 => ["2,1" => 1, "2,2" => 1, "2,3" => 1],
+        3 => ["3,1" => 1, "3,2" => 1, "3,3" => 1],
+        4 => ["1,1" => 1, "2,1" => 1, "3,1" => 1],
+        5 => ["1,2" => 1, "2,2" => 1, "3,2" => 1],
+        6 => ["1,3" => 1, "2,3" => 1, "3,3" => 1],
+        7 => ["1,1" => 1, "2,2" => 1, "3,3" => 1],
+        8 => ["1,3" => 1, "2,2" => 1, "3,1" => 1],
+        9 => ["1,1" => 0, "1,2" => 0, "1,3" => 0],
+        10 => ["2,1" => 0, "2,2" => 0, "2,3" => 0],
+        11 => ["3,1" => 0, "3,2" => 0, "3,3" => 0],
+        12 => ["1,1" => 0, "2,1" => 0, "3,1" => 0],
+        13 => ["1,2" => 0, "2,2" => 0, "3,2" => 0],
+        14 => ["1,3" => 0, "2,3" => 0, "3,3" => 0],
+        15 => ["1,1" => 0, "2,2" => 0, "3,3" => 0],
+        16 => ["1,3" => 0, "2,2" => 0, "3,1" => 0]
       ];
 
     private $algorithm;
@@ -67,38 +43,39 @@ class TicTacToe
 
     public function go(int $row = null, int $column = null)
     {
+        
         $newCanvasState = ( $row && $column ? $this->makeStep($row, $column, $this->canvas) : $this->algorithm->makeStep( $this->canvas ) );
 
         $this->canvas = $newCanvasState;
-
+        
         return $this->isWinner($this->canvas, $this->winerVariations);
     }
 
     public function makeStep(int $row, int $column, array $canvas)
     {
         $step = "{$row},{$column}";
+        $copyCanvas = $canvas;
 
-        $newState = array_map(function($key, $item) use ($step) {
-          return $key === $step ? true : null;
-        }, array_keys($canvas), $canvas);
-
-        return array_intersect_key($newState, $canvas);
+        foreach($copyCanvas as $key => $value) {
+            if($step === $key && $value === null) {
+                $copyCanvas[$key] = 1;
+                break;
+            }
+        }
+        return $copyCanvas;
 
     }
 
     private function isWinner(array $canvas, array $winerVariations)
     {
         $result = false;
-
         foreach($winerVariations as $key => $value) {
-          $itersect = array_diff_assoc($value, $canvas);
+          $diff = array_diff_assoc($value, $canvas );
       
-          if(empty($itersect)) {
+          if(empty($diff)) {
             $result = true;
-            break;
           }
         }
-      
         return $result;
     }
 
@@ -108,19 +85,3 @@ class TicTacToe
     }
 
 }
-
-
-    // TicTacToe в конструкторе принимает в себя интерфейс алгоритмов TicTacToeAlgoritmInterface
-    // Если не пришел не один, то в настройки записывает стандартный Easy:
-        // $this->algorithm = $algorithm ?? new Easy;
-
-    // Далее если ход компьютера то происходит работа с этим алгоритмом.
-        // Что делает алгоритм:
-            // Принимает в себя карту. Начинает проходить по ней
-            // находит свободное поле и ставит туда свое значение(X/0)
-            // Возвращает новую карту с проставленными значениями, далее array_merge и новое состояние.
-
-    // Если ход человека, то карта заполняется нужными значениями, которые будут переданы пользователем.
-    
-    // У TicTacToe будет метод go - который имеет два необъязательныйх параметра. (int) $row = null  and  (int) $column null
-    // если они null значит вызываем алгоритм иначе вызываем madeStep(); 

@@ -7,13 +7,27 @@ class Normal implements TicTacToeAlgoritmInterface
 {
     public function makeStep(array $canvas):array
     {
-        $copyCanvas = array_reverse($canvas);
-        foreach($copyCanvas as $key => $value) {
-          if(!$value) {
-            $copyCanvas[$key] = true;
+        $copyCanvas = $canvas;
+
+        $strategy = [
+            "3,1" => null, "3,2" => null, "3,3" => null,
+            "2,1" => null, "2,2" => null, "2,3" => null,
+            "1,1" => null, "1,2" => null, "1,3" => null,
+        ];
+
+        // reverse strategy canvas format structure
+        $mergeCanvas = array_merge($strategy, $canvas);
+
+        foreach($mergeCanvas as $key => $value) {
+          if($value === null) {
+            $mergeCanvas[$key] = 0;
             break;
+          } else {
+               continue;
           }
         }
-        return array_reverse($copyCanvas);
+
+        //reverse default canvas format structure
+        return array_merge($copyCanvas, $mergeCanvas);
     }
 }

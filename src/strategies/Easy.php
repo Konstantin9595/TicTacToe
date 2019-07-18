@@ -7,13 +7,16 @@ class Easy implements TicTacToeAlgoritmInterface
 {
     public function makeStep(array $canvas):array
     {
-        $newState = [];
-        foreach($canvas as $key => $value) {
-          if(!$value) {
-            $newState[$key] = true;
+        $copyCanvas = $canvas;
+        foreach($copyCanvas as $key => $value) {
+          if($value === null) {
+            $copyCanvas[$key] = 0;
             break;
+          } else {
+              continue;
           }
         }
-        return array_intersect_key($newState, $canvas);
+
+        return $copyCanvas;
     }
 }
