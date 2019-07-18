@@ -16,7 +16,7 @@ class TicTacToeTest extends TestCase
         $TicTacToe->go();
         $this->assertFalse($TicTacToe->go(2, 2));
         $TicTacToe->go();
-
+        var_dump($TicTacToe->getStateCanvas());
         $this->assertTrue($TicTacToe->go(3, 3));
     }
 
