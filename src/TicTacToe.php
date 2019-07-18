@@ -11,9 +11,9 @@ class TicTacToe
 {
 
     private $canvas = [ 
-        1 => null, 2 => null, 3 => null,
-        4 => null, 5 => null, 6 => null,
-        7 => null, 8 => null, 9 => null
+        "1,1" => null, "1,2" => null, "1,3" => null,
+        "2,1" => null, "2,2" => null, "2,3" => null,
+        "3,1" => null, "3,2" => null, "3,3" => null
     ];
 
     private $algorithm;
@@ -25,25 +25,22 @@ class TicTacToe
 
     public function go(int $row = null, int $column = null)
     {
-        $newCanvasState = ( $row && $column ? $this->makeStep($row, $column) : $this->algorithm->makeStep() );
+        $newCanvasState = ( $row && $column ? $this->makeStep($row, $column, $this->canvas) : $this->algorithm->makeStep( $this->canvas ) );
 
         $this->canvas = array_intersect_key($newCanvasState, $this->canvas);
+
+    }
+
+    public function makeStep(int $row, int $column, array $canvas)
+    {
+        $step = "{$row},{$column}";
+
+        $newState = array_map(function($key, $item) use ($step) {
+          return $key === $step ? true : null;
+        }, array_keys($canvas), $canvas);
+
+        return $newState;
+
     }
 
 }
-
-
-    // TicTacToe в конструкторе принимает в себя интерфейс алгоритмов TicTacToeAlgoritmInterface
-    // Если не пришел не один, то в настройки записывает стандартный Easy:
-        // $this->algorithm = $algorithm ?? new Easy;
-
-    // Далее если ход компьютера то происходит работа с этим алгоритмом.
-        // Что делает алгоритм:
-            // Принимает в себя карту. Начинает проходить по ней
-            // находит свободное поле и ставит туда свое значение(X/0)
-            // Возвращает новую карту с проставленными значениями, далее array_merge и новое состояние.
-
-    // Если ход человека, то карта заполняется нужными значениями, которые будут переданы пользователем.
-    
-    // У TicTacToe будет метод go - который имеет два необъязательныйх параметра. (int) $row = null  and  (int) $column null
-    // если они null значит вызываем алгоритм иначе вызываем madeStep(); 
