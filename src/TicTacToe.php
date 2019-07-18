@@ -4,7 +4,6 @@
 namespace App;
 
 use App\strategies\Easy;
-use GuzzleHttp\Client;
 use App\TicTacToeAlgoritmInterface;
 
 class TicTacToe
